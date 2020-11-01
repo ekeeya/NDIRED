@@ -16,6 +16,15 @@ AS7265X sensor;
 const int rs = 4, en = 5, d4 = 0, d5 = 1, d6 = 2, d7 = 3;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
+void sendSMS(char*msg){
+  Serial.println("AT+CMGS=\"+256798888765\"\r\n"); // Set the GSM module in text mode and text number we shall be sending sms to
+  delay(1500);
+  Serial.println(msg); //The sms text you want to send
+  delay(1000);
+  Serial.println((char) 26)// ASIIC code of Ctrl+Z
+  
+}
+
 
 void lcdPrint (char data[]){
   lcd.clear();
