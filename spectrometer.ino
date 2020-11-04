@@ -1,5 +1,6 @@
 // include the library code:
 #include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
 #include "SparkFun_AS7265X.h" 
 #include <Wire.h> //for I2C
 
@@ -15,15 +16,6 @@ AS7265X sensor;
 // lcd instance has to be global so its aavailable to every function
 const int rs = 4, en = 5, d4 = 0, d5 = 1, d6 = 2, d7 = 3;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-
-void sendSMS(char*msg){
-  Serial.println("AT+CMGS=\"+256798888765\"\r\n"); // Set the GSM module in text mode and text number we shall be sending sms to
-  delay(1500);
-  Serial.println(msg); //The sms text you want to send
-  delay(1000);
-  Serial.println((char) 26)// ASIIC code of Ctrl+Z
-  
-}
 
 
 void lcdPrint (char data[]){
@@ -124,4 +116,20 @@ void loop() {
     }else{
       //digitalWrite(7,LOW);
       }
+}
+
+void sendSMS(char* msg){
+ Serial.println("Sending SMS...");               //Show this message on serial monitor
+  sim800l.print("AT+CMGF=1\r");                   //Set the module to SMS mode
+  delay(100);
+  sim800l.print("AT+CMGS=\"+25686292633\"\r");  //Phone number receiving SMS.
+  delay(500);
+  sim800l.print(msg);       //This is the text to send to the phone number.
+  delay(500);
+  sim800l.print((char)26);// (required according to the datasheet)
+  delay(500);
+  sim800l.println();
+  Serial.println("Text Sent.");
+  delay(500);
+  
 }
