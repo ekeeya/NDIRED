@@ -101,7 +101,7 @@ void loop() {
           if(is_drunk == true){
             //send SMS to user
             char* smsBody = "I am a Drunk Driver" // Number that sends this message is the driver's no.
-            sendSMS(smsBody);
+            sendSMS(smsBdy);
             // Display on the LCD the percentage content
             }
             else{
