@@ -14,8 +14,8 @@ In this project, our humans will be solutions at first.
 
 
 <p align ="center">
-  <a href="#installation">Installation</a>.
-  <a href="#usage">Usage</a>.
-  <a href="#features">Features</a>.
+  <a href="#installation">Installation</a>
+  <a href="#usage">Usage</a>
+  <a href="#features">Features</a>
   <a href="#license">License</a>
 </p>
