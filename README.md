@@ -11,3 +11,23 @@ compared to a thin one after taking the same exact content of alcohol.
 
 But hey we wanna try, atleast let it be possible to tell the exact content in a drink or solution. then we shall proceed.
 In this project, our humans will be solutions at first.
+
+
+<p align ="center">
+  <a href="#installation">Installation</a>
+  <a href="#usage">Usage</a>
+  <a href="#features">Features</a>
+  <a href="#license">License</a>
+</p>
+
+# Installation
+
+
+
+# Usage
+
+
+# Features
+
+
+# Licenses

@@ -1,5 +1,6 @@
 // include the library code:
 #include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
 #include "SparkFun_AS7265X.h" 
 #include "Sim800L.h"
 #include <Wire.h> //for I2C
@@ -101,7 +102,7 @@ void loop() {
           if(is_drunk == true){
             //send SMS to user
             char* smsBody = "I am a Drunk Driver" // Number that sends this message is the driver's no.
-            sendSMS(smsBody);
+            sendSMS(smsBdy);
             // Display on the LCD the percentage content
             }
             else{
@@ -116,4 +117,20 @@ void loop() {
     }else{
       //digitalWrite(7,LOW);
       }
+}
+
+void sendSMS(char* msg){
+ Serial.println("Sending SMS...");               //Show this message on serial monitor
+  sim800l.print("AT+CMGF=1\r");                   //Set the module to SMS mode
+  delay(100);
+  sim800l.print("AT+CMGS=\"+25686292633\"\r");  //Phone number receiving SMS.
+  delay(500);
+  sim800l.print(msg);       //This is the text to send to the phone number.
+  delay(500);
+  sim800l.print((char)26);// (required according to the datasheet)
+  delay(500);
+  sim800l.println();
+  Serial.println("Text Sent.");
+  delay(500);
+  
 }
