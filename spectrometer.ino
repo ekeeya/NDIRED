@@ -1,6 +1,7 @@
 // include the library code:
 #include <LiquidCrystal.h>
 #include "SparkFun_AS7265X.h" 
+#include "Sim800L.h"
 #include <Wire.h> //for I2C
 
 double determineEthanolContent(double sensorValue);
