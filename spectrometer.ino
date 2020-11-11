@@ -1,136 +1,54 @@
-// include the library code:
-#include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
-#include "SparkFun_AS7265X.h" 
-#include "Sim800L.h"
-#include <Wire.h> //for I2C
+/*
+  Button
 
-double determineEthanolContent(double sensorValue);
-boolean isDrunk(double ethanolContent);
-void sendSMS(char* msg);
-void lcdPrint(char data[]);
-void deviceReset();
+  Turns on and off a light emitting diode(LED) connected to digital pin 13,
+  when pressing a pushbutton attached to pin 2.
 
+  The circuit:
+  - LED attached from pin 13 to ground
+  - pushbutton attached to pin 2 from +5V
+  - 10K resistor attached to pin 2 from ground
 
-AS7265X sensor;
+  - Note: on most Arduinos there is already an LED on the board
+    attached to pin 13.
 
-// lcd instance has to be global so its aavailable to every function
-const int rs = 4, en = 5, d4 = 0, d5 = 1, d6 = 2, d7 = 3;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+  created 2005
+  by DojoDave <http://www.0j0.org>
+  modified 30 Aug 2011
+  by Tom Igoe
 
+  This example code is in the public domain.
 
-void lcdPrint (char data[]){
-  lcd.clear();
-  lcd.print(data);
-  lcd.display();
-  }
+  http://www.arduino.cc/en/Tutorial/Button
+*/
 
-// C's wiered array return function
-double * sensorRead(){
-  sensor.takeMeasurementsWithBulb(); //This is a hard wait while all 18 channels are measured
-  double channel0 = sensor.getCalibratedA();
-  double channel1 = sensor.getCalibratedB();
-  double channel2 = sensor.getCalibratedC();
-  double channel3 = sensor.getCalibratedD();
-  double channel4 = sensor.getCalibratedE();
-  double channel5 = sensor.getCalibratedF();
-  
-  double channel6 = sensor.getCalibratedG();
-  double channel7 = sensor.getCalibratedH();
-  double channel8 = sensor.getCalibratedI();
-  double channel9 = sensor.getCalibratedJ();
-  double channel10 = sensor.getCalibratedK();
-  double channel11 = sensor.getCalibratedL();
+// constants won't change. They're used here to set pin numbers:
+const int buttonPin = 2;     // the number of the pushbutton pin
+const int ledPin =  13;      // the number of the LED pin
 
-  double channel12 = sensor.getCalibratedR();
-  double channel13 = sensor.getCalibratedS();
-  double channel14 = sensor.getCalibratedT();
-  double channel15 = sensor.getCalibratedU();
-  double channel16 = sensor.getCalibratedV();
-  double channel17 = sensor.getCalibratedW();
+// variables will change:
+int buttonState = 0;         // variable for reading the pushbutton status
 
-  static double channels[] = {channel0, channel1,channel2, channel3, channel4,channel5, channel6,channel7, channel8, channel9,
-                       channel10, channel11,channel12, channel13, channel14,channel15, channel16,channel17};
-                 
-  return channels;
-  
-  }
-
-  
 void setup() {
-  Serial.begin(115200); // according to docs serial listens at 115200 not 9600 baund rate
-  sensor.disableIndicator(); //Turn off the blue status LED for accuracy
-  // set up the LCD's number of columns and rows:
-  lcd.begin(16, 2);
-  
-  if(sensor.begin() == false)
-  {
-    lcdPrint("BAD CONNECTION");
-    Serial.println("Sensor does not appear to be connected. Please check wiring."); // debugging
-    while(1); // hange till good sensor wiring
-  }
-
-  //button pin set as input pullup
-  pinMode(6,INPUT_PULLUP); //LED
-  
-  // for testing purposes wen button is pressed
-  //pinMode(7, OUTPUT); //switch
-  
-  
+  // initialize the LED pin as an output:
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  // initialize the pushbutton pin as an input:
+  pinMode(buttonPin, INPUT);
 }
 
-
-
-
-
-int count = 0;
 void loop() {
-  
-  if(digitalRead(6) ==LOW){
-    // If button is pressed then take the measurement
-      delay(250); // wait for the button bounce
-      count+=250;
-        if (count==1000){
-          double *allChannels;
-          allChannels = sensorRead(); //Take the reading and get all the light channels
-          
-          // Determine ethanol content takes the above array
-          double ethanalPercentage = determineEthanolContent(allChannels);
-          // Determine if Drunk
-          boolean is_drunk = isDrunk(ethanalPercentage);
+  // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
 
-          if(is_drunk == true){
-            //send SMS to user
-            char* smsBody = "I am a Drunk Driver" // Number that sends this message is the driver's no.
-            sendSMS(smsBdy);
-            // Display on the LCD the percentage content
-            }
-            else{
-              //Display on the LCD that all is clear
-              
-              }
-
-          // reset the sensor.
-      }
-    //digitalWrite(7,HIGH);
-    
-    }else{
-      //digitalWrite(7,LOW);
-      }
-}
-
-void sendSMS(char* msg){
- Serial.println("Sending SMS...");               //Show this message on serial monitor
-  sim800l.print("AT+CMGF=1\r");                   //Set the module to SMS mode
-  delay(100);
-  sim800l.print("AT+CMGS=\"+25686292633\"\r");  //Phone number receiving SMS.
-  delay(500);
-  sim800l.print(msg);       //This is the text to send to the phone number.
-  delay(500);
-  sim800l.print((char)26);// (required according to the datasheet)
-  delay(500);
-  sim800l.println();
-  Serial.println("Text Sent.");
-  delay(500);
-  
+  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  if (buttonState == HIGH) {
+    Serial.println("UP");
+    // turn LED on:
+    digitalWrite(ledPin, HIGH);
+  } else {
+    // turn LED off:
+    Serial.println("DOWN");
+    digitalWrite(ledPin, LOW);
+  }
 }
